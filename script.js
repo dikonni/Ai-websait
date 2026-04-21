@@ -177,7 +177,7 @@ async function callClaudeAPI(apiKey, message) {
       'Authorization': 'Bearer ' + apiKey
     },
     body: JSON.stringify({
-      model: 'grok-3-mini',
+      model: 'grok-3-beta',
       max_tokens: 1024,
       messages: [
         {
