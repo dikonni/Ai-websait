@@ -163,31 +163,28 @@ function showTyping() {
  * @returns {Promise<string>} - ЖИ жауабы
  */
 /**
- * Google Gemini API-ге сұраныс жіберіп, жауапты қайтарады.
+ * Grok (xAI) API-ге сұраныс жіберіп, жауапты қайтарады.
  *
- * @param {string} apiKey  - Пайдаланушының Gemini API кілті (aistudio.google.com)
+ * @param {string} apiKey  - Пайдаланушының Grok API кілті (console.x.ai)
  * @param {string} message - Пайдаланушының хабарламасы
  * @returns {Promise<string>} - ЖИ жауабы
  */
 async function callClaudeAPI(apiKey, message) {
-  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + apiKey;
-
-  var response = await fetch(url, {
+  var response = await fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type':  'application/json',
+      'Authorization': 'Bearer ' + apiKey
     },
     body: JSON.stringify({
-      system_instruction: {
-        parts: [{
-          text: 'Сен — пайдаланушыға веб-әзірлеу мен ЖИ-технологиялар туралы көмектесетін ассистентсің. Қысқаша, нақты және қазақша жауап бер.'
-        }]
-      },
-      contents: [
+      model: 'grok-3-mini',
+      max_tokens: 1024,
+      messages: [
         {
-          role: 'user',
-          parts: [{ text: message }]
-        }
+          role:    'system',
+          content: 'Сен — пайдаланушыға веб-әзірлеу мен ЖИ-технологиялар туралы көмектесетін ассистентсің. Қысқаша, нақты және қазақша жауап бер.'
+        },
+        { role: 'user', content: message }
       ]
     })
   });
@@ -200,9 +197,9 @@ async function callClaudeAPI(apiKey, message) {
 
   var data = await response.json();
 
-  // Gemini жауабынан мәтін алу
-  if (data.candidates && data.candidates.length > 0) {
-    return data.candidates[0].content.parts[0].text || 'Жауап алынды, бірақ мәтін жоқ.';
+  // Grok жауабынан мәтін алу (OpenAI форматымен бірдей)
+  if (data.choices && data.choices.length > 0) {
+    return data.choices[0].message.content || 'Жауап алынды, бірақ мәтін жоқ.';
   }
   return 'ЖИ бос жауап қайтарды.';
 }
@@ -273,7 +270,7 @@ function initChat() {
   var apiKeyInput = document.getElementById('apiKeyInput');
 
   // Бұрын сақталған API кілтін автоматты жүктеу
-  var savedKey = localStorage.getItem('gemini_api_key');
+  var savedKey = localStorage.getItem('grok_api_key');
   if (savedKey) {
     apiKeyInput.value = savedKey;
   }
@@ -282,9 +279,9 @@ function initChat() {
   apiKeyInput.addEventListener('input', function () {
     var key = apiKeyInput.value.trim();
     if (key) {
-      localStorage.setItem('gemini_api_key', key);
+      localStorage.setItem('grok_api_key', key);
     } else {
-      localStorage.removeItem('gemini_api_key');
+      localStorage.removeItem('grok_api_key');
     }
   });
 
