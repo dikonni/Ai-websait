@@ -163,21 +163,21 @@ function showTyping() {
  * @returns {Promise<string>} - ЖИ жауабы
  */
 /**
- * Grok (xAI) API-ге сұраныс жіберіп, жауапты қайтарады.
+ * Groq API-ге сұраныс жіберіп, жауапты қайтарады.
  *
- * @param {string} apiKey  - Пайдаланушының Grok API кілті (console.x.ai)
+ * @param {string} apiKey  - Пайдаланушының Groq API кілті (console.groq.com)
  * @param {string} message - Пайдаланушының хабарламасы
  * @returns {Promise<string>} - ЖИ жауабы
  */
 async function callClaudeAPI(apiKey, message) {
-  var response = await fetch('https://api.x.ai/v1/chat/completions', {
+  var response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type':  'application/json',
       'Authorization': 'Bearer ' + apiKey
     },
     body: JSON.stringify({
-      model: 'grok-3-beta',
+      model: 'llama-3.3-70b-versatile',
       max_tokens: 1024,
       messages: [
         {
@@ -197,7 +197,7 @@ async function callClaudeAPI(apiKey, message) {
 
   var data = await response.json();
 
-  // Grok жауабынан мәтін алу (OpenAI форматымен бірдей)
+  // Groq жауабынан мәтін алу
   if (data.choices && data.choices.length > 0) {
     return data.choices[0].message.content || 'Жауап алынды, бірақ мәтін жоқ.';
   }
@@ -270,7 +270,7 @@ function initChat() {
   var apiKeyInput = document.getElementById('apiKeyInput');
 
   // Бұрын сақталған API кілтін автоматты жүктеу
-  var savedKey = localStorage.getItem('grok_api_key');
+  var savedKey = localStorage.getItem('groq_api_key');
   if (savedKey) {
     apiKeyInput.value = savedKey;
   }
@@ -279,9 +279,9 @@ function initChat() {
   apiKeyInput.addEventListener('input', function () {
     var key = apiKeyInput.value.trim();
     if (key) {
-      localStorage.setItem('grok_api_key', key);
+      localStorage.setItem('groq_api_key', key);
     } else {
-      localStorage.removeItem('grok_api_key');
+      localStorage.removeItem('groq_api_key');
     }
   });
 
