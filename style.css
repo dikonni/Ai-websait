@@ -220,10 +220,10 @@ img { max-width: 100%; }
 .hero-title {
   font-size: clamp(2.8rem, 6vw, 5rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.01em;
   margin-bottom: 20px;
   color: var(--text);
-  font-family: 'Noto Sans', 'Noto Sans Kazakh', 'Syne', sans-serif;
+  font-family: 'Russo One', 'Noto Sans', sans-serif;
 }
 
 .hero-accent {
